@@ -1,0 +1,345 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a sample propertiestore server.  You can find \nout more about\
+    \ Swagger at \n[http://swagger.io](http://swagger.io) or on \n[irc.freenode.net,\
+    \ #swagger](http://swagger.io/irc/).\n"
+  version: "1.0.0"
+  title: "Swagger propertiestore"
+  termsOfService: "http://swagger.io/terms/"
+host: "virtserver.swaggerhub.com"
+basePath: "/revre/test/1.0.0"
+tags:
+- name: "property"
+  description: "Everything about your properties"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+- name: "store"
+  description: "Access to propertiestore orders"
+- name: "user"
+  description: "Operations about user"
+  externalDocs:
+    description: "Find out more about our store"
+    url: "http://swagger.io"
+schemes:
+- "https"
+- "http"
+paths:
+  /property:
+    post:
+      tags:
+      - "property"
+      summary: "Add a new property to database"
+      operationId: "addproperty"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/json"
+      - "application/xml"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "property object that needs to be added to database"
+        required: true
+        schema:
+          $ref: "#/definitions/Property"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Success"
+        405:
+          description: "Invalid input"
+      security:
+      - propertiestore_auth:
+        - "write:properties"
+        - "read:properties"
+  /property/findByLocation:
+    get:
+      tags:
+      - "property"
+      summary: "Finds properties by location"
+      description: "location could be provided in string format"
+      operationId: "findpropertiesByLocation"
+      produces:
+      - "application/json"
+      - "application/xml"
+      parameters:
+      - name: "location"
+        in: "query"
+        description: "Status values that need to be considered for filter"
+        required: true
+        type: "string"
+        default: "Edmonton"
+        x-exportParamName: "Location"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Property"
+        400:
+          description: "Invalid status value"
+      security:
+      - propertiestore_auth:
+        - "write:properties"
+        - "read:properties"
+  /property/{propertyID}:
+    get:
+      tags:
+      - "property"
+      summary: "Find property by ID"
+      description: "Returns a single property"
+      operationId: "getpropertyById"
+      produces:
+      - "application/json"
+      - "application/xml"
+      parameters:
+      - name: "propertyID"
+        in: "path"
+        description: "ID of property to return"
+        required: true
+        type: "integer"
+        format: "int64"
+        x-exportParamName: "PropertyID"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Property"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "property not found"
+      security:
+      - api_key: []
+    put:
+      tags:
+      - "property"
+      summary: "Updates a property in database with form data"
+      operationId: "updatepropertyWithForm"
+      consumes:
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/json"
+      - "application/xml"
+      parameters:
+      - name: "propertyID"
+        in: "path"
+        description: "ID of property that needs to be updated"
+        required: true
+        type: "integer"
+        format: "int64"
+        x-exportParamName: "PropertyID"
+      - name: "name"
+        in: "formData"
+        description: "Updated name of the property"
+        required: false
+        type: "string"
+        x-exportParamName: "Name"
+      - name: "status"
+        in: "formData"
+        description: "Updated status of the property"
+        required: false
+        type: "string"
+        x-exportParamName: "Status"
+      responses:
+        405:
+          description: "Invalid input"
+      security:
+      - propertiestore_auth:
+        - "write:properties"
+        - "read:properties"
+    delete:
+      tags:
+      - "property"
+      summary: "Deletes a property"
+      operationId: "deleteproperty"
+      produces:
+      - "application/json"
+      - "application/xml"
+      parameters:
+      - name: "api_key"
+        in: "header"
+        required: false
+        type: "string"
+        x-exportParamName: "ApiKey"
+      - name: "propertyID"
+        in: "path"
+        description: "property id to delete"
+        required: true
+        type: "integer"
+        format: "int64"
+        x-exportParamName: "PropertyID"
+      responses:
+        200:
+          description: "Success"
+        400:
+          description: "Invalid ID supplied"
+      security:
+      - propertiestore_auth:
+        - "write:properties"
+        - "read:properties"
+  /property/{propertyID}/uploadImage:
+    post:
+      tags:
+      - "property"
+      summary: "uploads an image"
+      operationId: "uploadFile"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "propertyID"
+        in: "path"
+        description: "ID of property to update"
+        required: true
+        type: "integer"
+        format: "int64"
+        x-exportParamName: "PropertyID"
+      - name: "additionalMetadata"
+        in: "formData"
+        description: "Additional data to pass to server"
+        required: false
+        type: "string"
+        x-exportParamName: "AdditionalMetadata"
+      - name: "file"
+        in: "formData"
+        description: "file to upload"
+        required: false
+        type: "file"
+        x-exportParamName: "File"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+      security:
+      - propertiestore_auth:
+        - "write:properties"
+        - "read:properties"
+securityDefinitions:
+  propertiestore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://propertiestore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:properties: "modify properties in your account"
+      read:properties: "read your properties"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  Address:
+    type: "object"
+    properties:
+      StreetAddress:
+        type: "string"
+      StreetNumber:
+        type: "integer"
+      StreetNanme:
+        type: "string"
+      City:
+        type: "string"
+      Province:
+        type: "string"
+      PostalCode:
+        type: "string"
+      Country:
+        type: "string"
+    xml:
+      name: "Address"
+    example:
+      StreetAddress: "StreetAddress"
+      StreetNumber: 1
+      PostalCode: "PostalCode"
+      Country: "Country"
+      City: "City"
+      StreetNanme: "StreetNanme"
+      Province: "Province"
+  Tag:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+    xml:
+      name: "Tag"
+    example:
+      name: "name"
+      id: 5
+  Property:
+    type: "object"
+    required:
+    - "Address"
+    - "ListingID"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      ListingID:
+        type: "integer"
+        format: "int64"
+      Address:
+        $ref: "#/definitions/Address"
+      photoUrls:
+        type: "array"
+        items:
+          type: "object"
+          properties: {}
+      tags:
+        type: "array"
+        xml:
+          name: "tag"
+          wrapped: true
+        items:
+          $ref: "#/definitions/Tag"
+      status:
+        type: "string"
+        description: "property status in database"
+        enum:
+        - "available"
+        - "pending"
+        - "sold"
+    xml:
+      name: "property"
+    example:
+      photoUrls:
+      - "{}"
+      - "{}"
+      Address:
+        StreetAddress: "StreetAddress"
+        StreetNumber: 1
+        PostalCode: "PostalCode"
+        Country: "Country"
+        City: "City"
+        StreetNanme: "StreetNanme"
+        Province: "Province"
+      ListingID: 6
+      id: 0
+      tags:
+      - name: "name"
+        id: 5
+      - name: "name"
+        id: 5
+      status: "available"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+    example:
+      code: 0
+      type: "type"
+      message: "message"
