@@ -1,0 +1,14 @@
+syntax = "proto3";
+package locationservice;
+
+service location_service{
+    rpc convert_location (location) returns (map_coordinate){}
+}
+
+message location{
+    string address = 1;
+}
+message map_coordinate{
+    float lattitude = 1;
+    float longtitude = 2;
+}
