@@ -51,49 +51,49 @@ var routes = Routes{
 	Route{
 		"Index",
 		"GET",
-		"/revre/test/1.0.0/",
+		"//",
 		Index,
 	},
 
 	Route{
 		"Addproperty",
 		strings.ToUpper("Post"),
-		"/revre/test/1.0.0/property",
+		"//property",
 		Addproperty,
 	},
 
 	Route{
 		"Deleteproperty",
 		strings.ToUpper("Delete"),
-		"/revre/test/1.0.0/property/{propertyID}",
+		"//property/{propertyID}",
 		Deleteproperty,
 	},
 
 	Route{
 		"FindpropertiesByLocation",
 		strings.ToUpper("Get"),
-		"/revre/test/1.0.0/property/findByLocation",
+		"//property/findByLocation",
 		FindpropertiesByLocation,
 	},
 
 	Route{
 		"GetpropertyById",
 		strings.ToUpper("Get"),
-		"/revre/test/1.0.0/property/{propertyID}",
+		"//property/{propertyID}",
 		GetpropertyById,
 	},
 
 	Route{
 		"UpdatepropertyWithForm",
 		strings.ToUpper("Put"),
-		"/revre/test/1.0.0/property/{propertyID}",
+		"//property/{propertyID}",
 		UpdatepropertyWithForm,
 	},
 
 	Route{
 		"UploadFile",
 		strings.ToUpper("Post"),
-		"/revre/test/1.0.0/property/{propertyID}/uploadImage",
+		"//property/{propertyID}/uploadImage",
 		UploadFile,
 	},
 }

@@ -8,7 +8,7 @@ info:
   title: "Swagger propertiestore"
   termsOfService: "http://swagger.io/terms/"
 host: "virtserver.swaggerhub.com"
-basePath: "/revre/test/1.0.0"
+basePath: "/"
 tags:
 - name: "property"
   description: "Everything about your properties"
@@ -24,7 +24,6 @@ tags:
     url: "http://swagger.io"
 schemes:
 - "https"
-- "http"
 paths:
   /property:
     post:
