@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kong-dashboard
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: kong-dashboard
+        app: kong-dashboard
+    spec:
+      containers:
+        - name: kong-dashboard
+          image: gcr.io/revreplatform-220422/kong-dashboard
+          args: ["start", "--kong-url", "http://10.27.250.18:8001/"]
+          ports:
+            - name: main
+              containerPort: 8080
+              protocol: TCP
